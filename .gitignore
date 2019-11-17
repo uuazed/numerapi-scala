@@ -1,0 +1,5 @@
+*zip
+src/main/scala/Main.scala
+.DS_Store
+target/
+project/target/
