@@ -1,4 +1,3 @@
-import io.aexp.nodes.graphql.{Argument, Arguments, GraphQLRequestEntity, GraphQLTemplate}
 import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.io.File
@@ -61,17 +60,6 @@ class NumerApi(publidId: String, secretKey: String) {
       }"""
     val json = rawQuery(query, Map("username" -> username))
     json.as[PublicUserProfile]
-  }
-
-  def getUser: User = {
-    val template = new GraphQLTemplate()
-    val requestEntity: GraphQLRequestEntity = GraphQLRequestEntity.Builder()
-        .url("https://api-tournament.numer.ai")
-        .headers(headers)
-        .request(classOf[User])
-        .build()
-
-    template.query(requestEntity, classOf[User]).getResponse
   }
 
   def getDatasetUrl: String = {
