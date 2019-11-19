@@ -70,15 +70,8 @@ class NumerApi(publidId: String, secretKey: String) {
   }
 
   def getDatasetUrl: String = {
-    val template = new GraphQLTemplate()
-    val requestEntity: GraphQLRequestEntity = GraphQLRequestEntity.Builder()
-        .url("https://api-tournament.numer.ai")
-        .request(classOf[Dataset])
-        .arguments(new Arguments("dataset",
-                   new Argument("tournament", 8)))
-        .build()
-
-    template.query(requestEntity, classOf[Dataset]).getResponse.url
+    val query = "query {dataset(tournament: 8)}"
+    (rawQuery(query) \ "dataset").as[String]
   }
 
   def downloadDataset(filename: String) = {

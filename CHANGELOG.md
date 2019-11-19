@@ -6,3 +6,4 @@ Notable changes to this project.
 - added `uploadSubmission`
 - added `getUser`
 - added `getUserProfile`
+- added `getDatasetUrl`
