@@ -46,16 +46,21 @@ class NumerApi(publidId: String, secretKey: String) {
     (json \ "data").get
   }
 
-  def getUserProfile(username: String): V2UserProfile = {
-    val template = new GraphQLTemplate()
-    val requestEntity: GraphQLRequestEntity = GraphQLRequestEntity.Builder()
-        .url("https://api-tournament.numer.ai")
-        .request(classOf[V2UserProfile])
-        .arguments(new Arguments("V2UserProfile",
-                   new Argument("username", "uuazed")))
-        .build()
-    println(requestEntity.getRequest)
-    template.query(requestEntity, classOf[V2UserProfile]).getResponse
+  def getPublicUserProfile(username: String): PublicUserProfile = {
+    val query = """
+      query($username: String!) {
+        v2UserProfile(username: $username) {
+          badges
+          historicalNetNmrEarnings
+          historicalNetUsdEarnings
+          id
+          netEarnings
+          startDate
+          username
+        }
+      }"""
+    val json = rawQuery(query, Map("username" -> username))
+    json.as[PublicUserProfile]
   }
 
   def getUser: User = {

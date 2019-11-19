@@ -5,5 +5,5 @@ Notable changes to this project.
 - added `downloadDataset`
 - added `uploadSubmission`
 - added `getUser`
-- added `getUserProfile`
+- added `getPublicUserProfile`
 - added `getDatasetUrl`
