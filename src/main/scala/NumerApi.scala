@@ -6,12 +6,45 @@ import java.util
 import scalaj.http._
 import sys.process._
 import scala.language.postfixOps
+import play.api.libs.json.{Json, JsValue, JsSuccess, JsError, JsObject, JsString}
 import models._
 
 class NumerApi(publidId: String, secretKey: String) {
 
   private val headers = new util.HashMap[String, String]()
   headers.put("Authorization", s"Token ${publidId}$$${secretKey}")
+
+
+  def rawQuery(query: String, parameter: Map[String, String] = Map.empty[String, String], authorization: Boolean = false): JsValue = {
+
+    val headers2 = Seq("Content-type" -> "application/json",
+                       "Accept" -> "application/json")
+    val auth =
+      if (authorization)
+        Seq("Authorization" -> s"Token ${publidId}$$${secretKey}")
+      else
+        Nil
+
+    val content = Json.obj(
+        "query" -> query,
+        "variables" -> Json.toJson(parameter)
+      )
+    println("PAYLOAD: ", content.toString)
+
+    val raw = Http("https://api-tournament.numer.ai")
+      .postData(content.toString)
+      .headers(headers2)
+      .headers(auth)
+      .asString
+    val json = Json.parse(raw.body)
+
+    (json \ "errors").asOpt[JsValue] match {
+      case Some(messages) => println(messages)
+      case None =>
+    }
+    println("DATA: ", (json \ "data").get)
+    (json \ "data").get
+  }
 
   def getUserProfile(username: String): V2UserProfile = {
     val template = new GraphQLTemplate()
@@ -21,7 +54,7 @@ class NumerApi(publidId: String, secretKey: String) {
         .arguments(new Arguments("V2UserProfile",
                    new Argument("username", "uuazed")))
         .build()
-
+    println(requestEntity.getRequest)
     template.query(requestEntity, classOf[V2UserProfile]).getResponse
   }
 
@@ -52,36 +85,31 @@ class NumerApi(publidId: String, secretKey: String) {
     new URL(getDatasetUrl) #> new File(filename) !!
   }
 
-  def uploadSubmission(filePath: String) = {
+  def uploadSubmission(filePath: String): String = {
     val filename: String = filePath.split("/").last
-    val template = new GraphQLTemplate()
-    val requestEntity: GraphQLRequestEntity = GraphQLRequestEntity.Builder()
-      .url("https://api-tournament.numer.ai")
-      .headers(headers)
-      .request(classOf[SubmissionAuthorization])
-      .arguments(new Arguments("submission_upload_auth",
-                 new Argument("tournament", 8),
-                 new Argument("filename", filename)))
-      .build()
-    val url = template
-      .query(requestEntity, classOf[SubmissionAuthorization])
-      .getResponse
-      .getUrl
+    val authQuery = """
+      query($filename: String!) {
+          submission_upload_auth(filename: $filename
+                                 tournament: 8) {
+              url
+              filename
+          }
+      }"""
+    val auth = rawQuery(authQuery, Map("filename" -> filename), authorization=true)
+    val url = (auth \ "submission_upload_auth" \ "url").as[String]
+    val targetFilename = (auth \ "submission_upload_auth" \ "filename").as[String]
     val bytes: Array[Byte] = Files.readAllBytes(Paths.get(filePath))
-
     // upload the file
     Http(url).put(bytes).asString
-
-    val requestEntity2: GraphQLRequestEntity = GraphQLRequestEntity.Builder()
-      .url("https://api-tournament.numer.ai")
-      .headers(headers)
-      .arguments(new Arguments("createSubmission",
-                 new Argument("tournament", 8),
-                 new Argument("filename", filename)))
-      .request(classOf[Submission])
-      .build()
-
-    template.mutate(requestEntity2, classOf[Submission]).getResponse
-    }
-
+    val submissionMutation = """
+      mutation($filename: String!) {
+          create_submission(filename: $filename
+                            tournament: 8) {
+              id
+          }
+      }"""
+    val create = rawQuery(submissionMutation,
+      Map("filename" -> targetFilename), authorization=true)
+    (create \ "create_submission" \ "id").as[String]
+  }
 }
