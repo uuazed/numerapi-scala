@@ -1,3 +1,5 @@
+package numerapi
+
 import java.net.URL
 import java.nio.file.{Files, Paths}
 import java.io.File

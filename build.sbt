@@ -4,7 +4,7 @@ name := "numerapi"
 
 organization := "uuazed"
 
-version := "0.1"
+version := "0.1.1"
 
 libraryDependencies +=  "org.scalaj" %% "scalaj-http" % "2.4.2"
 
