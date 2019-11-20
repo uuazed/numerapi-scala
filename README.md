@@ -18,7 +18,7 @@ To get started, simply add the following lines to your `build.sbt` file
 
     resolvers += Resolver.bintrayRepo("uuazed", "maven")
 
-    libraryDependencies += "uuazed" %% "numerapi" % "0.1.1"
+    libraryDependencies += "uuazed" %% "numerapi" % "0.1.2"
 
 ## gradle
 
@@ -32,7 +32,7 @@ Add this to your `build.gradle` file:
      }
 
     dependencies {
-        compile "uuazed:numerapi_2.13:0.1"
+        compile "uuazed:numerapi_2.13:0.1.2"
     }
 
 # Usage
