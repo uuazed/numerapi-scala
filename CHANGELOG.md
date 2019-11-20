@@ -3,6 +3,7 @@ Notable changes to this project.
 
 ## [dev] - unreleased
 - add Scala usage example
+- more documentation
 
 ## [0.1.1] - 2019-11-19
 - use proper package to make import work
