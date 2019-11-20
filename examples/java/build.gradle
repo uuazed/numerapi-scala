@@ -1,0 +1,27 @@
+
+plugins {
+    id "application"
+}
+
+apply plugin: 'java'
+
+
+repositories {
+     maven {
+         url  "https://dl.bintray.com/uuazed/maven"
+     }
+     mavenCentral()
+ }
+
+dependencies {
+    compile "uuazed:numerapi_2.13:0.1"
+}
+
+
+ext {
+   javaMainClass = "Main"
+}
+
+application {
+    mainClassName = javaMainClass
+}
