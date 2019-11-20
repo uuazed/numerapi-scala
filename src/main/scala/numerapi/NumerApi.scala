@@ -20,11 +20,10 @@ class NumerApi(publidId: String, secretKey: String) {
 
     val headers2 = Seq("Content-type" -> "application/json",
                        "Accept" -> "application/json")
-    val auth =
-      if (authorization)
-        Seq("Authorization" -> s"Token ${publidId}$$${secretKey}")
-      else
-        Nil
+    val auth = authorization match {
+      case true => Seq("Authorization" -> s"Token ${publidId}$$${secretKey}")
+      case false => Nil
+    }
 
     val content = Json.obj(
         "query" -> query,
@@ -69,8 +68,9 @@ class NumerApi(publidId: String, secretKey: String) {
     (rawQuery(query) \ "dataset").as[String]
   }
 
-  def downloadDataset(filename: String) = {
+  def downloadDataset(filename: String): String = {
     new URL(getDatasetUrl) #> new File(filename) !!
+    filename
   }
 
   def uploadSubmission(filePath: String): String = {
