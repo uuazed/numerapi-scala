@@ -1,5 +1,6 @@
+![Bintray](https://img.shields.io/bintray/v/uuazed/maven/numerapi)
 
-# Numerai Scala API
+# Numerai API for JVM languages
 Automatically download data and upload predictions for the Numerai machine learning
 competition.
 
@@ -11,12 +12,28 @@ If you encounter any problems or have suggestions, feel free to open an issue.
 
 # Installation
 
+## sbt
+
 To get started, simply add the following lines to your `build.sbt` file
 
     resolvers += Resolver.bintrayRepo("uuazed", "maven")
 
     libraryDependencies += "uuazed" %% "numerapi" % "0.1.1"
 
+## gradle
+
+Add this to your `build.gradle` file:
+
+    repositories {
+         maven {
+             url  "https://dl.bintray.com/uuazed/maven"
+         }
+         mavenCentral()
+     }
+
+    dependencies {
+        compile "uuazed:numerapi_2.13:0.1"
+    }
 
 # Usage
 
@@ -27,7 +44,6 @@ Make sure you checkout the full usage examples in the `examples` directory.
 In short, using `numerapi` works like this:
 
     import numerapi.NumerApi
-
 
     object Main extends App {
 
