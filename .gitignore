@@ -3,3 +3,8 @@ src/main/scala/Main.scala
 .DS_Store
 target/
 project/target/
+examples/java/.gradle
+examples/java/build
+examples/scala/project
+src/main/scala/numerapi/Main.scala
+simple.csv
