@@ -12,18 +12,11 @@ import models._
 
 class NumerApi(publidId: String, secretKey: String) {
 
-  private val headers = new util.HashMap[String, String]()
-  headers.put("Authorization", s"Token ${publidId}$$${secretKey}")
-
-
   def rawQuery(query: String, parameter: Map[String, String] = Map.empty[String, String], authorization: Boolean = false): JsValue = {
 
-    val headers2 = Seq("Content-type" -> "application/json",
-                       "Accept" -> "application/json")
-    val auth = authorization match {
-      case true => Seq("Authorization" -> s"Token ${publidId}$$${secretKey}")
-      case false => Nil
-    }
+    val headers = Seq("Content-type" -> "application/json",
+                      "Accept" -> "application/json")
+    val auth = if (authorization) Seq("Authorization" -> s"Token ${publidId}$$${secretKey}") else Nil
 
     val content = Json.obj(
         "query" -> query,
@@ -33,7 +26,7 @@ class NumerApi(publidId: String, secretKey: String) {
 
     val raw = Http("https://api-tournament.numer.ai")
       .postData(content.toString)
-      .headers(headers2)
+      .headers(headers)
       .headers(auth)
       .asString
     val json = Json.parse(raw.body)
@@ -70,6 +63,7 @@ class NumerApi(publidId: String, secretKey: String) {
 
   def downloadDataset(filename: String): String = {
     new URL(getDatasetUrl) #> new File(filename) !!
+    
     filename
   }
 
