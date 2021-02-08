@@ -1,4 +1,4 @@
-scalaVersion := "2.13.1"
+scalaVersion := "2.13.4"
 
 name := "numerapi"
 
@@ -6,7 +6,7 @@ organization := "uuazed"
 
 libraryDependencies +=  "org.scalaj" %% "scalaj-http" % "2.4.2"
 
-libraryDependencies += "com.typesafe.play" %% "play-json" % "2.7.4"
+libraryDependencies += "com.typesafe.play" %% "play-json" % "2.9.2"
 
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 
