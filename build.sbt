@@ -13,3 +13,5 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
 licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
+
+publishTo := sonatypePublishToBundle.value
